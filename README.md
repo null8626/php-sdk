@@ -15,7 +15,7 @@ TopPHP uses composer to download. In order to install the library, use the follo
 * Enumerable constants for HTTP search lookups.
 * Flexible namespaces and interfaces for easily editing.
 * Up-to-standard package following the latest PSR.
-* Automatic bot statistics POST requests. (Shards, guilds)
+* Automatic bot statistics POST requests. (Guild count)
 
 ## Coming Soon
 

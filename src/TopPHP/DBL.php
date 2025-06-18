@@ -58,12 +58,6 @@ final class DBL implements BaseStruct
   private $features;
 
   /**
-   * @var     bool
-   * @access  public
-   */
-  public $connected;
-
-  /**
    * Creates a DBL instance.
    *
    * @param   array $parameters The parameters necessary for an established connection.
@@ -107,16 +101,11 @@ final class DBL implements BaseStruct
     $this->port = (!$parameters["webhook"]["port"]) ? Request::SERVER_PORT : $parameters["webhook"]["port"];
     $this->api = new Request($this->token, $this->http);
 
-    /** Proxy an HTTP request to see if it works. */
-    $_response = $this->api->req("GET", "/users/140862798832861184")["status"];
-    if($_response === "200") $this->connected = true;
-
     /** Finally do our feature checks from the parameters list. */
     if($parameters["auto_stats"])
     {
       $this->check_auto_stats(
-        $parameters["auto_stats"]["url"],
-        $parameters["auto_stats"]["id"]
+        $parameters["auto_stats"]["url"]
       );
     }
 
@@ -128,24 +117,18 @@ final class DBL implements BaseStruct
    * This can only be done for a website URL.
    *
    * @param   string  $path     The HTTP path you're using.
-   * @param   int     $id       The bot ID.
    * @param   array   $values   A list of values to be automatically posted.
    * @return  void
    */
-  protected function check_auto_stats(string $path, int $id, array $values)
+  protected function check_auto_stats(string $path, array $values)
   {
     try
     {
-      if($values["shards"])       $_json["shards"]        = $values["shards"];
-      if($values["shard_id"])     $_json["shard_id"]      = $values["shard_id"];
-      if($values["shard_count"])  $_json["shard_count"]   = $values["shard_count"];
       if($values["server_count"]) $_json["server_count"]  = $values["server_count"];
       else throw new MissingStatsException();
 
-      $_id = ($id) ? $id : throw new MissingStatsException();
       $_url = ($path) ? $path : throw new MissingStatsException();
-      $_type = Http::BOT;
-      $_request = $this->api->req("POST", "/{$_type}/{$_id}/stats", $_json)["json"];
+      $_request = $this->api->req("POST", "/bots/stats", $_json)["json"];
     }
 
     catch(Exception $error) { echo $error; }
@@ -171,104 +154,68 @@ final class DBL implements BaseStruct
   }
 
   /**
-   * Shows the information from the specified type through a query search.
+   * Displays the general information of several bots.
    *
-   * @param   string  $type The search type.
-   * @param   array   $json The JSON query fields, with key:val as assoc.
    * @return  array
    */
-  public function show_info(string $type, array $json = []): array
+  public function get_bots(): array
   {
-    switch($type)
-    {
-      case Http::USER:
-        $_path = "users";
-        break;
-
-      case Http::BOT:
-        $_path = "bots";
-        break;
-
-      default:
-        die("Invalid search parameter: {$type}");
-        break;
-    }
-
-    return $this->api->req("GET", "/{$type}", $json)["json"];
+    return $this->api->req("GET", "/bots", $json)["json"];
   }
 
   /**
-   * Displays the general information about something
-   * given through the search type.
+   * Displays the general information about a bot.
    *
-   * @param   string  $type The search type.
-   * @param   int     $id The bot/user ID.
+   * @param   int     $id The bot ID.
    * @return  array
    */
-  public function find_info(string $type, int $id): array
+  public function get_bot(int $id): array
   {
-    switch($type)
-    {
-      case Http::USER:
-        $_path = "users";
-        break;
-
-      case Http::BOT:
-        $_path = "bots";
-        break;
-
-      default:
-        die("Invalid search parameter: {$type}");
-        break;
-    }
-
-    return $this->api->req("GET", "/{$type}/{$id}")["json"];
+    return $this->api->req("GET", "/bots/{$id}")["json"];
   }
 
   /**
-   * Returns the total votes of the bot.
+   * Returns the unique voters of the bot.
    *
    * @param   int   $id The bot ID.
+   * @param   int   $page The page counter. Starts from 1.
    * @return  array
    */
-  public function get_votes(int $id)
+  public function get_votes(int $id, int $page)
   {
-    return $this->api->req("GET", "/bots/{$id}/votes")["json"];
+    return $this->api->req("GET", "/bots/{$id}/votes", ["page" => $page])["json"];
   }
 
   /**
    * Returns a boolean check for if a user voted for your bot.
    *
-   * @param   int   $id   The bot user ID.
    * @param   int   $user The user Snowflake ID.
    * @return  array
    */
-  public function get_user_vote(int $id, int $user): array
+  public function get_user_vote(int $user): array
   {
-    return $this->api->req("GET", "/bots/{$id}/check", ["userId" => $user])["json"]["voted"];
+    return $this->api->req("GET", "/bots/check", ["userId" => $user])["json"]["voted"];
   }
 
   /**
    * Returns the statistics of the bot.
    *
-   * @param   int   $id The bot ID.
    * @return  array
    */
-  public function get_stats(int $id): array
+  public function get_stats(): array
   {
-    return $this->api->req("GET", "/bots/{$id}/stats")["json"];
+    return $this->api->req("GET", "/bots/stats")["json"];
   }
 
   /**
    * Posts statistics to the bot's Top.gg page.
    *
-   * @param   int   $id The bot ID.
    * @param   array $json The JSON query fields.
    * @return  array
    */
-  public function post_stats(int $id, array $json): array
+  public function post_stats(array $json): array
   {
-    return $this->api->req("POST", "/bots/{$id}/stats", $json)["json"];
+    return $this->api->req("POST", "/bots/stats", $json)["json"];
   }
 
   /**

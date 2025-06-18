@@ -22,19 +22,19 @@ interface BaseStruct
    * procedures.
    */
   /** Show statistics for all bots/users or specified. */
-  public function show_info(string $type, array $json = []);
-  public function find_info(string $type, int $id);
+  public function get_bots();
+  public function get_bot(int $id);
 
   /** Get information on the votes, vote check; and stats. */
-  public function get_votes(int $id);
-  public function get_user_vote(int $id, int $user);
-  public function get_stats(int $id);
+  public function get_votes(int $id, int $page);
+  public function get_user_vote(int $user);
+  public function get_stats();
 
   /**
    * POST requests will be handled here, and have to be
    * taken into account differently due to their nature.
    */
-  public function post_stats(int $id, array $json);
+  public function post_stats(array $json);
 
   /** Accessor methods for private instances. */
   public function getHttp();
