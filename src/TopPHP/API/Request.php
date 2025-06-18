@@ -105,7 +105,7 @@ class Request implements RequestStruct
       $_request = @file_get_contents($_path, true, $_struct);
     }
 
-    catch (Exception $error) { return $error; }
+    catch (\Exception $error) { return $error; }
 
     finally
     {

@@ -109,7 +109,7 @@ final class DBL implements BaseStruct
       $parts = explode('.', $this->token);
       
       if (count($parts) < 2) {
-        throw new Exception();
+        throw new \Exception();
       }
   
       $encoded_json = $parts[1];
@@ -122,17 +122,17 @@ final class DBL implements BaseStruct
       $decoded_json = base64_decode($encoded_json, true);
       
       if ($decoded_json === false) {
-        throw new Exception();
+        throw new \Exception();
       }
   
       $token_data = json_decode($decoded_json, true);
       
       if (!isset($token_data['id']) || !is_numeric($token_data['id'])) {
-        throw new Exception();
+        throw new \Exception();
       }
   
       $this->id = intval($token_data['id']);
-    } catch (Exception $e) {
+    } catch (\Exception $e) {
       throw new MissingTokenException();
     }
 
@@ -166,7 +166,7 @@ final class DBL implements BaseStruct
       $_request = $this->api->req("POST", "/bots/stats", $_json)["json"];
     }
 
-    catch(Exception $error) { echo $error; }
+    catch(\Exception $error) { echo $error; }
 
     finally
     {
@@ -263,6 +263,10 @@ final class DBL implements BaseStruct
    */
   public function post_stats(int $server_count): array
   {
+    if (!$server_count || $server_count < 0) {
+      throw new \Exception("Server count must not be null, zero, or less.");
+    }
+
     return $this->api->req("POST", "/bots/stats", [
       "server_count" => $server_count,
     ])["json"];
