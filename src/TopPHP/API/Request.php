@@ -103,14 +103,14 @@ class Request implements RequestStruct
        * to receive information.
       */
       $_request = @file_get_contents($_path, true, $_struct);
-      if(!$_request) $_error = true;
+      if (!$_request) $_error = true;
     }
 
     catch (Exception $error) { return $error; }
 
     finally
     {
-      if(!$_error)
+      if (!$_error)
       {
         // header("Content-Type: application/json");
         // @http_response_code(intval($this->response) + 0);

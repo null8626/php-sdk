@@ -90,8 +90,8 @@ class Http implements HttpStruct
     $_headers = ($_type) ? get_headers($path) : "400";
     $_response = substr($_headers[0], 9, 3);
 
-    if($_response === "401") $_response = "200"; // This is because the token is not being enforced.
-    if($_response === "429")
+    if ($_response === "401") $_response = "200"; // This is because the token is not being enforced.
+    if ($_response === "429")
     {
       /**
        * We have two specific ratelimit exceptions here.

@@ -25,9 +25,10 @@ interface BaseStruct
   public function get_bots();
   public function get_bot(int $id);
 
-  /** Get information on the votes, vote check; and stats. */
+  /** Get information on the votes, vote check, weekend multiplier, and stats. */
   public function get_votes(int $page);
   public function get_user_vote(int $user);
+  public function is_weekend();
   public function get_stats();
 
   /**

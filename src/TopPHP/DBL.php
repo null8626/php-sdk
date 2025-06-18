@@ -97,10 +97,10 @@ final class DBL implements BaseStruct
       "webhook"     => []
     ];
 
-    if($parameters["auto_stats"]) $this->features["auto_stats"][0] = true;
-    if($parameters["safety"]) $this->features["safety"] = true;
-    if($parameters["webhook"]) $this->features["webhook"] = true;
-    if($parameters["token"]) $this->token = $parameters["token"];
+    if ($parameters["auto_stats"]) $this->features["auto_stats"][0] = true;
+    if ($parameters["safety"]) $this->features["safety"] = true;
+    if ($parameters["webhook"]) $this->features["webhook"] = true;
+    if ($parameters["token"]) $this->token = $parameters["token"];
     else throw new MissingTokenException();
 
     $this->http = (!$parameters["webhook"]["url"]) ? Request::SERVER_ADDR : $parameters["webhook"]["url"];
@@ -139,7 +139,7 @@ final class DBL implements BaseStruct
     }
 
     /** Finally do our feature checks from the parameters list. */
-    if($parameters["auto_stats"])
+    if ($parameters["auto_stats"])
     {
       $this->check_auto_stats(
         $parameters["auto_stats"]["url"]
@@ -161,7 +161,7 @@ final class DBL implements BaseStruct
   {
     try
     {
-      if($values["server_count"]) $_json["server_count"]  = $values["server_count"];
+      if ($values["server_count"]) $_json["server_count"]  = $values["server_count"];
       else throw new MissingStatsException();
 
       $_url = ($path) ? $path : throw new MissingStatsException();
@@ -173,7 +173,7 @@ final class DBL implements BaseStruct
     finally
     {
       header("Content-Type: application/json");
-      echo "<meta http-equiv='refresh' content='1800;URL=\"{$_url}\"' />";
+      echo "<meta http-equiv='refresh' content='900;URL=\"{$_url}\"' />";
     }
   }
 
@@ -187,7 +187,7 @@ final class DBL implements BaseStruct
   protected function check_safety()
   {
     /** One last time to check. */
-    if($this->features["safety"]) die();
+    if ($this->features["safety"]) die();
   }
 
   /**
@@ -217,7 +217,7 @@ final class DBL implements BaseStruct
    * @param   int   $page The page counter. Starts from 1.
    * @return  array
    */
-  public function get_votes(int $page)
+  public function get_votes(int $page): array
   {
     return $this->api->req("GET", "/bots/{$this->id}/votes", ["page" => $page])["json"];
   }
@@ -231,6 +231,16 @@ final class DBL implements BaseStruct
   public function get_user_vote(int $user): array
   {
     return $this->api->req("GET", "/bots/check", ["userId" => $user])["json"]["voted"];
+  }
+
+  /**
+   * Returns a boolean check for if the weekend multiplier is active, where a single vote counts as two.
+   *
+   * @return  array
+   */
+  public function is_weekend(): array
+  {
+    return $this->api->req("GET", "/weekend")["json"]["is_weekend"];
   }
 
   /**
