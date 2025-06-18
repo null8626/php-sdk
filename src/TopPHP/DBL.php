@@ -225,7 +225,7 @@ final class DBL implements BaseStruct
   /**
    * Returns the unique voters of the bot.
    *
-   * @param   int   $page The page counter. Starts from 1.
+   * @param   int   $page The page counter. Defaults to 1.
    * @return  array
    */
   public function get_votes(int $page = 1): array
@@ -234,24 +234,24 @@ final class DBL implements BaseStruct
   }
 
   /**
-   * Returns a boolean check for if a user voted for your bot.
+   * Returns a boolean for if a user has voted for your bot.
    *
    * @param   int   $user The user Snowflake ID.
    * @return  array
    */
   public function get_user_vote(int $user): array
   {
-    return $this->api->req("GET", "/bots/check", ["userId" => $user])["json"]["voted"];
+    return $this->api->req("GET", "/bots/check", ["userId" => $user])["json"];
   }
 
   /**
-   * Returns a boolean check for if the weekend multiplier is active, where a single vote counts as two.
+   * Returns a boolean for if the weekend multiplier is active, where a single vote counts as two.
    *
    * @return  array
    */
   public function is_weekend(): array
   {
-    return $this->api->req("GET", "/weekend")["json"]["is_weekend"];
+    return $this->api->req("GET", "/weekend")["json"];
   }
 
   /**
