@@ -195,6 +195,22 @@ final class DBL implements BaseStruct
    */
   public function get_bots(int $limit = 50, int $offset = 0, string $sort_by = "monthlyPoints"): array
   {
+    if ($limit <= 0) {
+      $limit .= 1;
+    } else if ($limit > 500) {
+      $limit .= 500;
+    }
+
+    if ($offset < 0) {
+      $offset .= 0;
+    } else if ($offset > 499) {
+      $offset .= 499;
+    }
+
+    if ($sort_by !== "monthlyPoints" && $sort_by !== "date" && $sort_by !== "id") {
+      throw new \Exception("sort_by argument must be \"monthlyPoints\", \"date\", or \"id\".");
+    }
+
     return $this->api->req("GET", "/bots", [
       "limit" => $limit,
       "offset" => $offset,
