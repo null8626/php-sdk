@@ -70,14 +70,14 @@ class Request implements RequestStruct
    * @param   array   $json Additional information you want to pass on as JSON.
    * @return  array
    */
-  public function req(string $type, string $path = null, array $json = [], int $port = self::SERVER_PORT): array
+  public function req(string $type, ?string $path = null, array $json = [], int $port = self::SERVER_PORT): array
   {
     $_http = new Http($this->http, $port);
     $_path = ($path) ? $_http->getHttp() . $path : "";
     $_error = false;
     $_request = null;
     $_response = null;
-    $_json = ($json) ? "?" . http_build_query($json) : "";
+    $_json = ($json && $type === "GET") ? "?" . http_build_query($json) : "";
 
     try
     {
@@ -96,14 +96,13 @@ class Request implements RequestStruct
                       "Authorization: {$this->token}" . "\r\n"
         ]
       ];
-      $_struct = @stream_context_create($_struct);
 
-      /**
-       * Here is where the official request is made
-       * to receive information.
-      */
+      if ($json && $type !== "GET") {
+        $_struct["http"]["content"] = json_encode($json);
+      }
+
+      $_struct = @stream_context_create($_struct);
       $_request = @file_get_contents($_path, true, $_struct);
-      if (!$_request) $_error = true;
     }
 
     catch (Exception $error) { return $error; }
@@ -112,19 +111,15 @@ class Request implements RequestStruct
     {
       if (!$_error)
       {
-        // header("Content-Type: application/json");
-        // @http_response_code(intval($this->response) + 0);
-
         $_struct = $_http->call(
           $type,
           $_path,
-          json_decode($_request, true)
+          $_request ? json_decode($_request, true) : []
         );
         $this->cache = $_struct;
 
         return $_struct;
       }
-
       else
       {
         $_error = error_get_last();

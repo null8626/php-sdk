@@ -83,8 +83,6 @@ final class DBL implements BaseStruct
      * KEKW.
      */
 
-    error_reporting(0);
-
     /**
      * Begin scanning through all of the possible accepted parameters.
      * PHP Warnings are thrown in the event that they're found to be as invalid keys
@@ -97,17 +95,14 @@ final class DBL implements BaseStruct
       "webhook"     => []
     ];
 
-    if ($parameters["auto_stats"]) $this->features["auto_stats"][0] = true;
-    if ($parameters["safety"]) $this->features["safety"] = true;
-    if ($parameters["webhook"]) $this->features["webhook"] = true;
-    if ($parameters["token"]) $this->token = $parameters["token"];
+    if (array_key_exists("auto_stats", $parameters) && $parameters["auto_stats"]) $this->features["auto_stats"][0] = true;
+    if (array_key_exists("safety", $parameters) && $parameters["safety"]) $this->features["safety"] = true;
+    if (array_key_exists("webhook", $parameters) && $parameters["webhook"]) $this->features["webhook"] = true;
+    if (array_key_exists("token", $parameters) && $parameters["token"]) $this->token = $parameters["token"];
     else throw new MissingTokenException();
 
-    $this->http = (!$parameters["webhook"]["url"]) ? Request::SERVER_ADDR : $parameters["webhook"]["url"];
-    $this->port = (!$parameters["webhook"]["port"]) ? Request::SERVER_PORT : $parameters["webhook"]["port"];
-
-    error_reporting(E_ALL);
-
+    $this->http = (!array_key_exists("webhook", $parameters) || !array_key_exists("url", $parameters["webhook"]) || !$parameters["webhook"]["url"]) ? Request::SERVER_ADDR : $parameters["webhook"]["url"];
+    $this->port = (!array_key_exists("webhook", $parameters) || !array_key_exists("port", $parameters["webhook"]) || !$parameters["webhook"]["port"]) ? Request::SERVER_PORT : $parameters["webhook"]["port"];
     $this->api = new Request($this->token, $this->http);
 
     try {
@@ -141,17 +136,13 @@ final class DBL implements BaseStruct
       throw new MissingTokenException();
     }
 
-    error_reporting(0);
-
     /** Finally do our feature checks from the parameters list. */
-    if ($parameters["auto_stats"])
+    if (array_key_exists("auto_stats", $parameters) && $parameters["auto_stats"])
     {
       $this->check_auto_stats(
         $parameters["auto_stats"]["url"]
       );
     }
-
-    error_reporting(E_ALL);
 
     $this->check_safety();
   }
@@ -267,12 +258,14 @@ final class DBL implements BaseStruct
   /**
    * Posts statistics to the bot's Top.gg page.
    *
-   * @param   array $json The JSON query fields.
+   * @param   int $server_count Your bot's server count.
    * @return  array
    */
-  public function post_stats(array $json): array
+  public function post_stats(int $server_count): array
   {
-    return $this->api->req("POST", "/bots/stats", $json)["json"];
+    return $this->api->req("POST", "/bots/stats", [
+      "server_count" => $server_count,
+    ])["json"];
   }
 
   /**

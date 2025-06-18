@@ -35,7 +35,7 @@ interface BaseStruct
    * POST requests will be handled here, and have to be
    * taken into account differently due to their nature.
    */
-  public function post_stats(array $json);
+  public function post_stats(int $server_count);
 
   /** Accessor methods for private instances. */
   public function getHttp();

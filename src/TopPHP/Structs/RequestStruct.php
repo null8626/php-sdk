@@ -15,7 +15,7 @@ namespace DBL\Structs;
 interface RequestStruct
 {
   public function __construct(string $token, string $http);
-  public function req(string $type, string $path = null, array $json = [], int $port = 80);
+  public function req(string $type, ?string $path = null, array $json = [], int $port = 80);
 
   /** Accessor methods for getting private instances. */
   public function getContents();

@@ -107,7 +107,6 @@ class Http implements HttpStruct
 
     /** Now provide the information for the structure. */
     $_path = ($_response === "200") ? $path : null;
-    $_payload = $payload ?? null;
 
     /**
      * All returned information will be formatted this way.
@@ -119,7 +118,7 @@ class Http implements HttpStruct
       "type"    => $_type,
       "path"    => $_path,
       "status"  => $_response,
-      "json"    => $_payload
+      "json"    => $payload
     ];
   }
 
