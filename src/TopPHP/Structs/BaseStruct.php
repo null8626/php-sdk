@@ -22,7 +22,7 @@ interface BaseStruct
    * procedures.
    */
   /** Show statistics for all bots/users or specified. */
-  public function get_bots();
+  public function get_bots(int $limit, int $offset, string $sort_by);
   public function get_bot(int $id);
 
   /** Get information on the votes, vote check, weekend multiplier, and stats. */

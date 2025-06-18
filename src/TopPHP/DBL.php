@@ -202,9 +202,13 @@ final class DBL implements BaseStruct
    *
    * @return  array
    */
-  public function get_bots(): array
+  public function get_bots(int $limit = 50, int $offset = 0, string $sort_by = "monthlyPoints"): array
   {
-    return $this->api->req("GET", "/bots", $json)["json"];
+    return $this->api->req("GET", "/bots", [
+      "limit" => $limit,
+      "offset" => $offset,
+      "sort" => $sort_by,
+    ])["json"];
   }
 
   /**
@@ -224,7 +228,7 @@ final class DBL implements BaseStruct
    * @param   int   $page The page counter. Starts from 1.
    * @return  array
    */
-  public function get_votes(int $page): array
+  public function get_votes(int $page = 1): array
   {
     return $this->api->req("GET", "/bots/{$this->id}/votes", ["page" => $page])["json"];
   }

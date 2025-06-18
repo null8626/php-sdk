@@ -77,7 +77,7 @@ class Request implements RequestStruct
     $_error = false;
     $_request = null;
     $_response = null;
-    $_json = ($json) ? http_build_query($json) : "";
+    $_json = ($json) ? "?" . http_build_query($json) : "";
 
     try
     {
