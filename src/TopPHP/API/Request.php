@@ -81,9 +81,6 @@ class Request implements RequestStruct
 
     try
     {
-      /** Ensure headers are restored. */
-      // header_remove("Content-Type");
-
       /**
        * Set up the HTTP request structure.
        * Will contextualize and create how we will interact.

@@ -192,7 +192,10 @@ final class DBL implements BaseStruct
   /**
    * Displays the general information of several bots.
    *
-   * @return array
+   * @param   int     $limit    The maximum amount of bots to be queried.
+   * @param   int     $offset   The amount of bots to be skipped.
+   * @param   string  $sort_by  Sorts results based on a specific criteria. Results will always be descending.
+   * @return  array
    */
   public function get_bots(int $limit = 50, int $offset = 0, string $sort_by = "monthlyPoints"): array
   {
@@ -275,7 +278,7 @@ final class DBL implements BaseStruct
   /**
    * Posts statistics to the bot's Top.gg page.
    *
-   * @param   int $server_count Your bot's server count.
+   * @param   int    $server_count  Your bot's server count.
    * @return  array
    */
   public function post_stats(int $server_count): array

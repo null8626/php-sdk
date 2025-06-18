@@ -50,8 +50,8 @@ class Http implements HttpStruct
    * Has to meet with the constants of currently
    * accepted HTTP requests compatible with the API.
    *
-   * @param   string  $type The HTTP request you're using.
-   * @param   string  $path The HTTP path you're calling.
+   * @param   string  $type    The HTTP request you're using.
+   * @param   string  $path    The HTTP path you're calling.
    * @param   array   $payload Additional information you want to pass on as JSON.
    * @return  array
    */
