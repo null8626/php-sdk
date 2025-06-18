@@ -16,6 +16,7 @@ use DBL\API\Request;
 use DBL\API\Exceptions\MissingTokenException;
 use DBL\API\Exceptions\MissingStatsException;
 use DBL\Structs\BaseStruct;
+use DBL\Widget;
 
 /**
  * Represents the TopPHP/Top.gg base class.
@@ -191,7 +192,7 @@ final class DBL implements BaseStruct
   /**
    * Displays the general information of several bots.
    *
-   * @return  array
+   * @return array
    */
   public function get_bots(int $limit = 50, int $offset = 0, string $sort_by = "monthlyPoints"): array
   {
