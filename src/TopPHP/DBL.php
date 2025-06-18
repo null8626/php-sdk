@@ -58,6 +58,12 @@ final class DBL implements BaseStruct
   private $features;
 
   /**
+   * @var     int
+   * @access  private
+   */
+  private $id;
+
+  /**
    * Creates a DBL instance.
    *
    * @param   array $parameters The parameters necessary for an established connection.
@@ -100,6 +106,37 @@ final class DBL implements BaseStruct
     $this->http = (!$parameters["webhook"]["url"]) ? Request::SERVER_ADDR : $parameters["webhook"]["url"];
     $this->port = (!$parameters["webhook"]["port"]) ? Request::SERVER_PORT : $parameters["webhook"]["port"];
     $this->api = new Request($this->token, $this->http);
+
+    try {
+      $parts = explode('.', $this->token);
+      
+      if (count($parts) < 2) {
+        throw new Exception();
+      }
+  
+      $encoded_json = $parts[1];
+      $padding = 4 - (strlen($encoded_json) % 4);
+      
+      if ($padding < 4) {
+        $encoded_json .= str_repeat('=', $padding);
+      }
+  
+      $decoded_json = base64_decode($encoded_json, true);
+      
+      if ($decoded_json === false) {
+        throw new Exception();
+      }
+  
+      $token_data = json_decode($decoded_json, true);
+      
+      if (!isset($token_data['id']) || !is_numeric($token_data['id'])) {
+        throw new Exception();
+      }
+  
+      $this->id = intval($token_data['id']);
+    } catch (Exception $e) {
+      throw new MissingTokenException();
+    }
 
     /** Finally do our feature checks from the parameters list. */
     if($parameters["auto_stats"])
@@ -177,13 +214,12 @@ final class DBL implements BaseStruct
   /**
    * Returns the unique voters of the bot.
    *
-   * @param   int   $id The bot ID.
    * @param   int   $page The page counter. Starts from 1.
    * @return  array
    */
-  public function get_votes(int $id, int $page)
+  public function get_votes(int $page)
   {
-    return $this->api->req("GET", "/bots/{$id}/votes", ["page" => $page])["json"];
+    return $this->api->req("GET", "/bots/{$this->id}/votes", ["page" => $page])["json"];
   }
 
   /**
