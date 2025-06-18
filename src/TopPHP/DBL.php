@@ -105,6 +105,9 @@ final class DBL implements BaseStruct
 
     $this->http = (!$parameters["webhook"]["url"]) ? Request::SERVER_ADDR : $parameters["webhook"]["url"];
     $this->port = (!$parameters["webhook"]["port"]) ? Request::SERVER_PORT : $parameters["webhook"]["port"];
+
+    error_reporting(E_ALL);
+
     $this->api = new Request($this->token, $this->http);
 
     try {
@@ -138,6 +141,8 @@ final class DBL implements BaseStruct
       throw new MissingTokenException();
     }
 
+    error_reporting(0);
+
     /** Finally do our feature checks from the parameters list. */
     if ($parameters["auto_stats"])
     {
@@ -145,6 +150,8 @@ final class DBL implements BaseStruct
         $parameters["auto_stats"]["url"]
       );
     }
+
+    error_reporting(E_ALL);
 
     $this->check_safety();
   }

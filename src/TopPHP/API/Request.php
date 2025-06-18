@@ -73,11 +73,11 @@ class Request implements RequestStruct
   public function req(string $type, string $path = null, array $json = [], int $port = self::SERVER_PORT): array
   {
     $_http = new Http($this->http, $port);
-    $_path = ($path) ? $_http->getHttp(), $path : null;
+    $_path = ($path) ? $_http->getHttp() . $path : "";
     $_error = false;
     $_request = null;
     $_response = null;
-    $_json = (![]) ? http_build_query($json) : null;
+    $_json = ($json) ? http_build_query($json) : "";
 
     try
     {
@@ -88,7 +88,7 @@ class Request implements RequestStruct
        * Set up the HTTP request structure.
        * Will contextualize and create how we will interact.
        */
-      $_path = $_path, $_json;
+      $_path = $_path . $_json;
       $_struct = [
         "http" => [
           "method" => $type,
@@ -127,7 +127,6 @@ class Request implements RequestStruct
 
       else
       {
-        error_reporting(E_ALL);
         $_error = error_get_last();
 
         /**
