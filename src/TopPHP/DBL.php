@@ -141,7 +141,8 @@ final class DBL implements BaseStruct
     if (array_key_exists("auto_stats", $parameters) && $parameters["auto_stats"])
     {
       $this->check_auto_stats(
-        $parameters["auto_stats"]["url"]
+        $parameters["auto_stats"]["url"],
+        $parameters["auto_stats"]["callback"]
       );
     }
 
@@ -152,27 +153,21 @@ final class DBL implements BaseStruct
    * Checks if stats should be posted to the website automatically.
    * This can only be done for a website URL.
    *
-   * @param   string  $path     The HTTP path you're using.
-   * @param   array   $values   A list of values to be automatically posted.
+   * @param   string    $url       The HTTP path you're using.
+   * @param   callable  $callback  The callback function that returns the bot's server count.
    * @return  void
    */
-  protected function check_auto_stats(string $path, array $values)
+  private function check_auto_stats(string $url, callable $callback)
   {
     try
     {
-      if ($values["server_count"]) $_json["server_count"]  = $values["server_count"];
-      else throw new MissingStatsException();
-
-      $_url = ($path) ? $path : throw new MissingStatsException();
-      $_request = $this->api->req("POST", "/bots/stats", $_json)["json"];
+      $this->post_stats($callback());
     }
-
-    catch(\Exception $error) { echo $error; }
-
+    catch (\Exception $error) { echo $error; }
     finally
     {
       header("Content-Type: application/json");
-      echo "<meta http-equiv='refresh' content='900;URL=\"{$_url}\"' />";
+      echo "<meta http-equiv='refresh' content='900;URL=\"{$url}\"' />";
     }
   }
 
