@@ -11,11 +11,13 @@
  */
 
 namespace DBL;
+
 use DBL\API\Http;
 use DBL\API\Request;
 use DBL\API\Exceptions\MissingTokenException;
 use DBL\API\Exceptions\MissingStatsException;
 use DBL\Structs\BaseStruct;
+use DBL\Webhook;
 use DBL\Widget;
 
 /**
@@ -245,7 +247,7 @@ final class DBL implements BaseStruct
    * @param   int   $user The user Snowflake ID.
    * @return  array
    */
-  public function get_user_vote(int $user): array
+  public function has_voted(int $user): array
   {
     return $this->api->req("GET", "/bots/check", ["userId" => $user])["json"];
   }

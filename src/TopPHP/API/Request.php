@@ -11,6 +11,7 @@
  */
 
 namespace DBL\API;
+
 use DBL\API\Http;
 use DBL\Structs\RequestStruct;
 
