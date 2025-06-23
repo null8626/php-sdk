@@ -11,11 +11,13 @@
  */
 
 namespace DBL;
+
 use DBL\API\Http;
 use DBL\API\Request;
 use DBL\API\Exceptions\MissingTokenException;
 use DBL\API\Exceptions\MissingStatsException;
 use DBL\Structs\BaseStruct;
+use DBL\Webhook;
 use DBL\Widget;
 
 /**
@@ -161,7 +163,7 @@ final class DBL implements BaseStruct
   {
     try
     {
-      $this->post_stats($callback());
+      $this->post_server_count($callback());
     }
     catch (\Exception $error) { echo $error; }
     finally
@@ -234,7 +236,7 @@ final class DBL implements BaseStruct
    * @param   int   $page The page counter. Defaults to 1.
    * @return  array
    */
-  public function get_votes(int $page = 1): array
+  public function get_voters(int $page = 1): array
   {
     return $this->api->req("GET", "/bots/{$this->id}/votes", ["page" => $page])["json"];
   }
@@ -245,7 +247,7 @@ final class DBL implements BaseStruct
    * @param   int   $user The user Snowflake ID.
    * @return  array
    */
-  public function get_user_vote(int $user): array
+  public function has_voted(int $user): array
   {
     return $this->api->req("GET", "/bots/check", ["userId" => $user])["json"];
   }
@@ -261,30 +263,29 @@ final class DBL implements BaseStruct
   }
 
   /**
-   * Returns the statistics of the bot.
+   * Returns your bot's posted server count.
    *
-   * @return  array
+   * @return  int
    */
-  public function get_stats(): array
+  public function get_server_count(): int
   {
-    return $this->api->req("GET", "/bots/stats")["json"];
+    return $this->api->req("GET", "/bots/stats")["json"]["server_count"];
   }
 
   /**
-   * Posts statistics to the bot's Top.gg page.
+   * Posts your bot's server count to Top.gg.
    *
    * @param   int    $server_count  Your bot's server count.
-   * @return  array
    */
-  public function post_stats(int $server_count): array
+  public function post_server_count(int $server_count)
   {
     if (!$server_count || $server_count < 0) {
       throw new \Exception("Server count must not be null, zero, or less.");
     }
 
-    return $this->api->req("POST", "/bots/stats", [
+    $this->api->req("POST", "/bots/stats", [
       "server_count" => $server_count,
-    ])["json"];
+    ]);
   }
 
   /**

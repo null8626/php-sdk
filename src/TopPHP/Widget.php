@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * This file is respectively apart of the TopPHP project.
+ *
+ * Copyright (c) 2021-present James Walston
+ * Some rights are reserved.
+ *
+ * This copyright is subject to the MIT license which
+ * fully entails the details in the LICENSE file.
+ */
+
 namespace DBL;
 
 enum WidgetType: string {

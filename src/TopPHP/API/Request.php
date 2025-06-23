@@ -11,6 +11,7 @@
  */
 
 namespace DBL\API;
+
 use DBL\API\Http;
 use DBL\Structs\RequestStruct;
 
@@ -37,7 +38,7 @@ class Request implements RequestStruct
   /** @var string */
   private $response;
 
-  public const SERVER_ADDR = "https://top.gg/api";
+  public const SERVER_ADDR = "https://top.gg/api/v1";
   public const SERVER_PORT = 80;
 
   /**
