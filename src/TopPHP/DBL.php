@@ -231,7 +231,7 @@ final class DBL implements BaseStruct
   }
 
   /**
-   * Returns the unique voters of the bot.
+   * Returns the unique voters of the project.
    *
    * @param   int   $page The page counter. Defaults to 1.
    * @return  array
@@ -242,9 +242,9 @@ final class DBL implements BaseStruct
   }
 
   /**
-   * Returns a boolean for if a user has voted for your bot.
+   * Returns a boolean for if a user has voted for your project.
    *
-   * @param   int   $user The user Snowflake ID.
+   * @param   int   $user The user ID.
    * @return  array
    */
   public function has_voted(int $user): array

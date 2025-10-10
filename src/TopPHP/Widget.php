@@ -43,7 +43,7 @@ final class Widget {
   }
 
   /**
-   * Generates a small widget URL for displaying an entity's owner.
+   * Generates a small widget URL for displaying a project's owner.
    *
    * @param   WidgetType   $ty       The widget type.
    * @param   int          $id       The ID.

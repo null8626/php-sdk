@@ -38,7 +38,7 @@ class Request implements RequestStruct
   /** @var string */
   private $response;
 
-  public const SERVER_ADDR = "https://top.gg/api/v1";
+  public const SERVER_ADDR = "https://top.gg/api";
   public const SERVER_PORT = 80;
 
   /**
@@ -91,7 +91,7 @@ class Request implements RequestStruct
         "http" => [
           "method" => $type,
           "header" => "Content-Type: application/json" . "\r\n" .
-                      "Authorization: {$this->token}" . "\r\n"
+                      "Authorization: Bearer {$this->token}" . "\r\n"
         ]
       ];
 
@@ -134,7 +134,7 @@ class Request implements RequestStruct
           "type"    => $type,
           "path"    => $_path,
           "status"  => $_response,
-          "json"    => ["message" => $_error["message"]]
+          "json"    => ["message" => $_error["message"] ?? $_error["detail"]]
         ];
 
         return $this->content;
