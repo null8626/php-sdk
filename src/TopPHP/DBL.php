@@ -239,50 +239,6 @@ final class DBL implements BaseStruct
   }
 
   /**
-   * Displays the general information of several bots.
-   *
-   * @param   int     $limit    The maximum amount of bots to be queried.
-   * @param   int     $offset   The amount of bots to be skipped.
-   * @param   string  $sort_by  Sorts results based on a specific criteria. Results will always be descending.
-   * @return  array
-   */
-  public function get_bots(int $limit = 50, int $offset = 0, string $sort_by = "monthlyPoints"): array
-  {
-    if ($limit <= 0) {
-      $limit .= 1;
-    } else if ($limit > 500) {
-      $limit .= 500;
-    }
-
-    if ($offset < 0) {
-      $offset .= 0;
-    } else if ($offset > 499) {
-      $offset .= 499;
-    }
-
-    if ($sort_by !== "monthlyPoints" && $sort_by !== "date" && $sort_by !== "id") {
-      throw new \Exception("sort_by argument must be \"monthlyPoints\", \"date\", or \"id\".");
-    }
-
-    return $this->api->req("GET", "/bots", [
-      "limit" => $limit,
-      "offset" => $offset,
-      "sort" => $sort_by,
-    ])["json"];
-  }
-
-  /**
-   * Displays the general information about a bot.
-   *
-   * @param   int     $id The bot ID.
-   * @return  array
-   */
-  public function get_bot(int $id): array
-  {
-    return $this->api->req("GET", "/bots/{$id}")["json"];
-  }
-
-  /**
    * Returns the unique voters of your project.
    *
    * @param   int   $id The project ID. Unused, no longer has an effect.
@@ -326,6 +282,50 @@ final class DBL implements BaseStruct
   public function post_stats(int $id, array $json)
   {
     $this->api->req("POST", "/bots/stats", $json);
+  }
+
+  /**
+   * Displays the general information of several bots.
+   *
+   * @param   int     $limit    The maximum amount of bots to be queried.
+   * @param   int     $offset   The amount of bots to be skipped.
+   * @param   string  $sort_by  Sorts results based on a specific criteria. Results will always be descending.
+   * @return  array
+   */
+  public function get_bots(int $limit = 50, int $offset = 0, string $sort_by = "monthlyPoints"): array
+  {
+    if ($limit <= 0) {
+      $limit .= 1;
+    } else if ($limit > 500) {
+      $limit .= 500;
+    }
+
+    if ($offset < 0) {
+      $offset .= 0;
+    } else if ($offset > 499) {
+      $offset .= 499;
+    }
+
+    if ($sort_by !== "monthlyPoints" && $sort_by !== "date" && $sort_by !== "id") {
+      throw new \Exception("sort_by argument must be \"monthlyPoints\", \"date\", or \"id\".");
+    }
+
+    return $this->api->req("GET", "/bots", [
+      "limit" => $limit,
+      "offset" => $offset,
+      "sort" => $sort_by,
+    ])["json"];
+  }
+
+  /**
+   * Displays the general information about a bot.
+   *
+   * @param   int     $id The bot ID.
+   * @return  array
+   */
+  public function get_bot(int $id): array
+  {
+    return $this->api->req("GET", "/bots/{$id}")["json"];
   }
 
   /**
