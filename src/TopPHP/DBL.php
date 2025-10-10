@@ -205,7 +205,7 @@ final class DBL implements BaseStruct
         break;
 
       default:
-        die("Invalid search parameter: {$type}");
+        throw new \Exception("Invalid search parameter: {$type}");
         break;
     }
 
@@ -231,7 +231,7 @@ final class DBL implements BaseStruct
         break;
 
       default:
-        die("Invalid search parameter: {$type}");
+        throw new \Exception("Invalid search parameter: {$type}");
         break;
     }
 
