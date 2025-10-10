@@ -13,6 +13,7 @@
 namespace DBL\API;
 
 use DBL\Structs\HttpStruct;
+use DBL\API\Exceptions\ResourceRatelimitException;
 
 /**
  * Represents the HTTP class for Top.gg.
@@ -104,7 +105,7 @@ class Http implements HttpStruct
        * will be updated in the future.
        */
 
-       die("You have encountered a rate limit. Please refer to the JSON contents for the remaining time.");
+      throw new ResourceRatelimitException("You have encountered a rate limit. Please refer to the JSON contents for the remaining time.");
     }
 
     /** Now provide the information for the structure. */

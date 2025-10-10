@@ -15,19 +15,14 @@ namespace DBL;
 use DBL\API\Http;
 use DBL\API\Request;
 use DBL\API\Exceptions\MissingTokenException;
-use DBL\API\Exceptions\MissingStatsException;
 use DBL\Structs\BaseStruct;
 use DBL\Webhook;
 use DBL\Widget;
 
 /**
- * Represents the TopPHP/Top.gg base class.
- * This class handles all of the specified
- * GET and POST requests that the API allows
- * to be called on, and has methods declared
- * for each specific/particular usage.
+ * Top.gg API v0 client
  */
-final class DBL implements BaseStruct
+class DBL implements BaseStruct
 {
   /**
    * @var     string
@@ -156,14 +151,14 @@ final class DBL implements BaseStruct
    * This can only be done for a website URL.
    *
    * @param   string    $url       The HTTP path you're using.
-   * @param   callable  $callback  The callback function that returns the bot's server count.
+   * @param   callable  $callback  The callback function that returns the bot's statistics.
    * @return  void
    */
   private function check_auto_stats(string $url, callable $callback)
   {
     try
     {
-      $this->post_stats($callback());
+      $this->post_stats(0, $callback());
     }
     catch (\Exception $error) { echo $error; }
     finally
@@ -215,7 +210,7 @@ final class DBL implements BaseStruct
   /**
    * @deprecated Use get_bot() instead.
    * 
-   * Displays the general information about something given through the search type.
+   * Gets the general information about something given through the search type.
    *
    * @param   string  $type The search type.
    * @param   int     $id The bot/user ID.
@@ -245,21 +240,21 @@ final class DBL implements BaseStruct
    * @param   int   $page The page counter. Defaults to 1.
    * @return  array
    */
-  public function get_votes(int $id, int $page = 1): array
+  public function get_votes(int $id = 0, int $page = 1): array
   {
     return $this->api->req("GET", "/bots/{$this->id}/votes", ["page" => $page])["json"];
   }
 
   /**
-   * Returns a boolean for if a user has voted for your project.
+   * Returns true if a user has voted for your project.
    *
    * @param   int   $id The project ID. Unused, no longer has an effect.
    * @param   int   $user The user ID.
-   * @return  array
+   * @return  bool
    */
-  public function get_user_vote(int $id, int $user): array
+  public function get_user_vote(int $id, int $user): bool
   {
-    return $this->api->req("GET", "/bots/check", ["userId" => $user])["json"]["voted"];
+    return $this->api->req("GET", "/bots/check", ["userId" => $user])["json"]["voted"] != 0;
   }
 
   /**
@@ -274,7 +269,7 @@ final class DBL implements BaseStruct
   }
 
   /**
-   * Posts your Discord bot's statistics to the API. This will update the server count in your Discord bot's Top.gg page.
+   * Posts your Discord bot's statistics to the API. This will update the statistics in your Discord bot's Top.gg page.
    *
    * @param   int    $id    The bot ID. Unused, no longer has an effect.
    * @param   array  $json  Your bot's new statistics.
@@ -285,7 +280,7 @@ final class DBL implements BaseStruct
   }
 
   /**
-   * Displays the general information of several bots.
+   * Gets the general information of several bots.
    *
    * @param   int     $limit    The maximum amount of bots to be queried.
    * @param   int     $offset   The amount of bots to be skipped.
@@ -318,7 +313,7 @@ final class DBL implements BaseStruct
   }
 
   /**
-   * Displays the general information about a bot.
+   * Gets the general information about a bot.
    *
    * @param   int     $id The bot ID.
    * @return  array
@@ -329,13 +324,13 @@ final class DBL implements BaseStruct
   }
 
   /**
-   * Returns a boolean for if the weekend multiplier is active, where a single vote counts as two.
+   * Returns true if the weekend multiplier is active, where a single vote counts as two.
    *
-   * @return  array
+   * @return  bool
    */
-  public function is_weekend(): array
+  public function is_weekend(): bool
   {
-    return $this->api->req("GET", "/weekend")["json"];
+    return $this->api->req("GET", "/weekend")["json"]["is_weekend"];
   }
 
   /**

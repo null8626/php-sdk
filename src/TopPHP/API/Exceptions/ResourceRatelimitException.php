@@ -17,35 +17,21 @@ namespace DBL\API\Exceptions;
  * This allows for exceptions to be made when
  * the HTTP hits a rate limit for a specific request.
  */
-class ResourceRatelimitException
+class ResourceRatelimitException extends \Exception
 {
   /** @var mixed */
   public $message;
-
-  /** Special throwing rules. */
-  public const THROW_NONE    = 0;
-  public const THROW_DEFAULT = 1;
 
   /**
    * Creates a ResourceRatelimitException class.
    *
    * @param   string      $message  The error message.
-   * @param   const|null  $type     The throwing type.
-   * @return  void
    */
-  public function __construct(string $message, $type = self::THROW_DEFAULT)
+  public function __construct(string $message)
   {
+    parent::__construct($message);
+
     $this->message = $message;
-
-    switch($type)
-    {
-      case self::THROW_NONE:
-        break;
-
-      default:
-        die($this->message);
-        break;
-    }
   }
 }
 
