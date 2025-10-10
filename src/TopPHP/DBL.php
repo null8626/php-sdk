@@ -163,7 +163,7 @@ final class DBL implements BaseStruct
   {
     try
     {
-      $this->post_server_count($callback());
+      $this->post_stats($callback());
     }
     catch (\Exception $error) { echo $error; }
     finally
@@ -231,12 +231,13 @@ final class DBL implements BaseStruct
   }
 
   /**
-   * Returns the unique voters of the project.
+   * Returns the unique voters of your project.
    *
+   * @param   int   $id The project ID. Unused, no longer has an effect.
    * @param   int   $page The page counter. Defaults to 1.
    * @return  array
    */
-  public function get_voters(int $page = 1): array
+  public function get_votes(int $id, int $page = 1): array
   {
     return $this->api->req("GET", "/bots/{$this->id}/votes", ["page" => $page])["json"];
   }
@@ -244,12 +245,35 @@ final class DBL implements BaseStruct
   /**
    * Returns a boolean for if a user has voted for your project.
    *
+   * @param   int   $id The project ID. Unused, no longer has an effect.
    * @param   int   $user The user ID.
    * @return  array
    */
-  public function has_voted(int $user): array
+  public function get_user_vote(int $id, int $user): array
   {
-    return $this->api->req("GET", "/bots/check", ["userId" => $user])["json"];
+    return $this->api->req("GET", "/bots/check", ["userId" => $user])["json"]["voted"];
+  }
+
+  /**
+   * Returns your bot's posted statistics.
+   *
+   * @param   int   $id The bot ID. Unused, no longer has an effect.
+   * @return  array 
+   */
+  public function get_stats(int $id = 0): array
+  {
+    return $this->api->req("GET", "/bots/stats")["json"];
+  }
+
+  /**
+   * Posts your Discord bot's statistics to the API. This will update the server count in your Discord bot's Top.gg page.
+   *
+   * @param   int    $id    The bot ID. Unused, no longer has an effect.
+   * @param   array  $json  Your bot's new statistics.
+   */
+  public function post_stats(int $id, array $json)
+  {
+    $this->api->req("POST", "/bots/stats", $json);
   }
 
   /**
@@ -260,32 +284,6 @@ final class DBL implements BaseStruct
   public function is_weekend(): array
   {
     return $this->api->req("GET", "/weekend")["json"];
-  }
-
-  /**
-   * Returns your bot's posted server count.
-   *
-   * @return  int
-   */
-  public function get_server_count(): int
-  {
-    return $this->api->req("GET", "/bots/stats")["json"]["server_count"];
-  }
-
-  /**
-   * Posts your bot's server count to Top.gg.
-   *
-   * @param   int    $server_count  Your bot's server count.
-   */
-  public function post_server_count(int $server_count)
-  {
-    if (!$server_count || $server_count < 0) {
-      throw new \Exception("Server count must not be null, zero, or less.");
-    }
-
-    $this->api->req("POST", "/bots/stats", [
-      "server_count" => $server_count,
-    ]);
   }
 
   /**

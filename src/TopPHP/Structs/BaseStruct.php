@@ -26,16 +26,16 @@ interface BaseStruct
   public function get_bot(int $id);
 
   /** Get information on your voters, vote check, weekend multiplier, and stats. */
-  public function get_voters(int $page);
-  public function has_voted(int $user);
+  public function get_votes(int $id, int $page);
+  public function get_user_vote(int $id, int $user);
   public function is_weekend();
-  public function get_server_count();
+  public function get_stats(int $id);
 
   /**
    * POST requests will be handled here, and have to be
    * taken into account differently due to their nature.
    */
-  public function post_server_count(int $server_count);
+  public function post_stats(int $id, array $json);
 
   /** Accessor methods for private instances. */
   public function getHttp();
