@@ -24,6 +24,7 @@ use DBL\Structs\HttpStruct;
 class Http implements HttpStruct
 {
   public const BOT = "bots";
+  public const USER = "users";
   public const POST = "POST";
   public const GET = "GET";
 

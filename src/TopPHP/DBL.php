@@ -187,6 +187,58 @@ final class DBL implements BaseStruct
   }
 
   /**
+   * @deprecated Use get_bots() instead.
+   * 
+   * Shows the information from the specified type through a query search.
+   *
+   * @param   string  $type The search type.
+   * @param   array   $json The JSON query fields, with key:val as assoc.
+   * @return  array
+   */
+  public function show_info(string $type, array $json = []): array
+  {
+    trigger_error('show_info() is deprecated, use get_bots() instead', E_USER_DEPRECATED);
+
+    switch($type)
+    {
+      case Http::BOT:
+        break;
+
+      default:
+        die("Invalid search parameter: {$type}");
+        break;
+    }
+
+    return $this->api->req("GET", "/bots", $json)["json"];
+  }
+
+  /**
+   * @deprecated Use get_bot() instead.
+   * 
+   * Displays the general information about something given through the search type.
+   *
+   * @param   string  $type The search type.
+   * @param   int     $id The bot/user ID.
+   * @return  array
+   */
+  public function find_info(string $type, int $id): array
+  {
+    trigger_error('find_info() is deprecated, use get_bot() instead', E_USER_DEPRECATED);
+
+    switch($type)
+    {
+      case Http::BOT:
+        break;
+
+      default:
+        die("Invalid search parameter: {$type}");
+        break;
+    }
+
+    return $this->api->req("GET", "/bots/{$id}")["json"];
+  }
+
+  /**
    * Displays the general information of several bots.
    *
    * @param   int     $limit    The maximum amount of bots to be queried.

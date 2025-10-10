@@ -22,6 +22,9 @@ interface BaseStruct
    * procedures.
    */
   /** Show statistics for all bots/users or specified. */
+  public function show_info(string $type, array $json = []);
+  public function find_info(string $type, int $id);
+
   public function get_bots(int $limit, int $offset, string $sort_by);
   public function get_bot(int $id);
 
